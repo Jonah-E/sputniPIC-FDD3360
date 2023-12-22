@@ -1,0 +1,7 @@
+IndentWidth:     4
+
+BreakBeforeBraces: Linux
+
+SpaceAfterCStyleCast: true
+
+PointerAlignment: Left
