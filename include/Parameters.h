@@ -9,7 +9,7 @@
 
 /** Simulation Parameters */
 struct parameters {
-    
+
     /** light speed */
     double c;
     /** 4  pi */
@@ -18,14 +18,14 @@ struct parameters {
     double dt;
     /** decentering parameter */
     double th;
-    
+
     /** number of time cycles */
     int ncycles;
     /** mover predictor correcto iteration */
     int NiterMover;
     /** number of particle of subcycles in the mover */
     int n_sub_cycles;
-    
+
     /** simulation box length - X direction   */
     double Lx;
     /** simulation box length - Y direction   */
@@ -46,12 +46,12 @@ struct parameters {
     double z_center;
     /** object size - assuming a cubic box or sphere  */
     double L_square;
-    
-    
-    
+
+
+
     /** number of actual species */
     int ns;
-    
+
     // This for maximum NS_MAX species. To have more increase the array size in NS_MAX
     /** number of particles per cell - X direction */
     int npcelx[NS_MAX];
@@ -81,9 +81,9 @@ struct parameters {
     double v0[NS_MAX];
     /** Drift velocity - Direction Z     */
     double w0[NS_MAX];
-    
-    
-    
+
+
+
     /** Boundary Condition: Periodicity **/
     // here you have to set the topology for the fields
     /** Periodicity for fields X **/
@@ -98,8 +98,8 @@ struct parameters {
     bool PERIODICY_P;
     /** Periodicity for Particles Y **/
     bool PERIODICZ_P;
-    
-    
+
+
     /** Boundary condition on particles
      0 = exit
      1 = perfect mirror
@@ -117,8 +117,8 @@ struct parameters {
     int bcPfaceZright;
     /** Boundary Condition Particles: FaceYleft */
     int bcPfaceZleft;
-    
-    
+
+
     /** Field Boundary Condition
      0 =  Dirichlet Boundary Condition: specifies the valueto take pn the boundary of the domain
      1 =  Neumann Boundary Condition: specifies the value of derivative to take on the boundary of the domain
@@ -136,7 +136,7 @@ struct parameters {
     int bcPHIfaceZright;
     /** Boundary Condition Electrostatic Potential:FaceZleft */
     int bcPHIfaceZleft;
-    
+
     /** Boundary Condition EM Field: FaceXright */
     int bcEMfaceXright;
     /** Boundary Condition EM Field: FaceXleft */
@@ -149,11 +149,11 @@ struct parameters {
     int bcEMfaceZright;
     /** Boundary Condition EM Field: FaceZleft */
     int bcEMfaceZleft;
-    
+
     /** velocity of the injection from the wall */
     double Vinj;
-    
-    
+
+
     /** Initial Condition*/
     /** current sheet thickness */
     double delta;
@@ -171,31 +171,31 @@ struct parameters {
     double pitch_angle;
     /** energy of the particle */
     double energy;
-    
+
     /** Smoothing quantities */
     bool SmoothON;
     /** Smoothing value*/
     double SmoothValue; // between 0 and 1, typically 0.5
     /** Ntimes: smoothing is applied */
     int SmoothTimes;
-    
-    
+
+
     /** boolean value for verbose results */
     bool verbose;
     /** RESTART */
     bool RESTART;
-    
-    
+
+
     /** Poisson Correction */
     bool PoissonCorrection;
     /** CG solver stopping criterium tolerance */
     double CGtol;
     /** GMRES solver stopping criterium tolerance */
     double GMREStol;
-    
+
     /** needed if restart */
     int first_cycle_n;
-    
+
     /** Output for field */
     int FieldOutputCycle;
     /** Output for particles */
@@ -204,7 +204,7 @@ struct parameters {
     int RestartOutputCycle;
     /** Output for diagnostics */
     int DiagnosticsOutputCycle;
-    
+
     /** inputfile */
     std::string inputfile;
     /** SaveDirName     */
@@ -213,6 +213,16 @@ struct parameters {
     std::string RestartDirName;
     /** name of the file with wave amplitude and phases */
     std::string WaveFile;
-    
+
 };
+
+/** GPU */
+struct parameters_gpu {
+    double dt;
+    double c;
+    bool PERIODICX, PERIODICY, PERIODICZ;
+};
+
+void parameters_cpy(struct parameters_gpu* dst, struct parameters* src);
+
 #endif

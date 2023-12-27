@@ -39,14 +39,14 @@ struct grid {
     double xStart, xEnd, yStart, yEnd, zStart, zEnd;
     /** domain size */
     double Lx, Ly, Lz;
-    
+
     /** Periodicity for fields X **/
     bool PERIODICX;
     /** Periodicity for fields Y **/
     bool PERIODICY;
     /** Periodicity for fields Z **/
     bool PERIODICZ;
-    
+
     // Nodes coordinate
     /** coordinate node X */
     FPfield* XN_flat;
@@ -57,8 +57,8 @@ struct grid {
     /** coordinate node Z */
     FPfield* ZN_flat;
     FPfield*** ZN;
-    
-    
+
+
 };
 
 /** Set up the grid quantities */
@@ -72,7 +72,7 @@ void grid_deallocate(struct grid*);
 
 /** interpolation Node to Center */
 void interpN2Cfield(FPfield***, FPfield***, FPfield***, FPfield***, FPfield***, FPfield***, struct grid*);
-    
+
 /** interpolation Node to Center */
 void interpC2Ninterp(FPinterp***, FPinterp***, struct grid*);
 
@@ -109,5 +109,29 @@ void lapN2N(FPfield***, FPfield***, grid*);
 /** calculate laplacian on central points, given a scalar field defined on central points */
 void lapC2C(FPfield***, FPfield***, grid*);
 
+/** GPU */
+struct grid_gpu {
+    int nyn;
+    int nzn;
+    FPfield* XN_flat;
+    FPfield* YN_flat;
+    FPfield* ZN_flat;
+    FPfield invdx;
+    FPfield invdy;
+    FPfield invdz;
+    double xStart;
+    double yStart;
+    double zStart;
+
+    FPfield invVOL;
+
+    double Lx, Ly, Lz;
+};
+
+
+cudaError_t grid_allocate_gpu(struct grid_gpu* gpu_grd, size_t grd_arrays_size);
+void grid_deallocate_gpu(struct grid_gpu* gpu_grd);
+void grid_cpy(struct grid_gpu* dst, struct grid* src);
+void grid_cpy_to_gpu(struct grid_gpu* dst, struct grid* src);
 
 #endif
