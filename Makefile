@@ -15,6 +15,9 @@ OBJS=$(subst $(SRCDIR),$(OBJDIR), $(SRCS))
 OBJS:=$(subst .cpp,_cpp.o,$(OBJS))
 OBJS:=$(subst .cu,_cu.o,$(OBJS))
 
+DATA_DIR := ./data
+$(shell mkdir -p $(DATA_DIR))
+
 BIN := ./bin
 TARGET=sputniPIC.out
 TARGET_GPU=sputniPIC_gpu.out
@@ -42,6 +45,11 @@ $(OBJDIR)/%_cpp.o: $(SRCDIR)/%.cpp
 	[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
 	$(NVCC) $(CXXFLAGS) $< -c -o $@
 
+.PHONY: clean clean-data
+
 clean:
 	rm -rf $(OBJS)
 	rm -rf $(TARGET)
+
+clean-data:
+	rm -rf $(DATA_DIR)/*
