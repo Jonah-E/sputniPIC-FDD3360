@@ -70,12 +70,21 @@ int main(int argc, char **argv){
 
     // Allocate Particles
     particles *part = new particles[param.ns];
+#ifdef COMPARE
+    particles *part_gpu = new particles[param.ns];
+#endif
     // allocation
     for (int is=0; is < param.ns; is++){
+#ifdef COMPARE
+        particle_allocate(&param,&part_gpu[is],is);
+#endif
         particle_allocate(&param,&part[is],is);
     }
 
     // Initialization
+#ifdef COMPARE
+    initGEM(&param,&grd,&field,&field_aux,part_gpu,ids);
+#endif
     initGEM(&param,&grd,&field,&field_aux,part,ids);
 
 
@@ -96,14 +105,25 @@ int main(int argc, char **argv){
 
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
-        for (int is=0; is < param.ns; is++)
+        for (int is=0; is < param.ns; is++){
 #ifdef USE_GPU
             mover_PC_gpu(&part[is],&field,&grd,&param);
 #else
+#ifdef COMPARE
+            mover_PC_gpu(&part_gpu[is],&field,&grd,&param);
+            mover_PC(&part[is],&field,&grd,&param);
+#else
             mover_PC(&part[is],&field,&grd,&param);
 #endif
+#endif
+        }
         eMover += (cpuSecond() - iMover); // stop timer for mover
-
+    //
+#ifdef COMPARE
+        for (int is=0; is < param.ns; is++){
+          particle_compaire(&part[is],&part_gpu[is]);
+        }
+#endif
 
 
 

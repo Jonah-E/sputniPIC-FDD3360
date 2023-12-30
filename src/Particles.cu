@@ -587,9 +587,10 @@ void particles_cpy(struct particles_gpu* dst, struct particles* src)
         dst->nop = src->nop;
     } else {
         dst->nop = src->npmax;
-        printf("Error: Number of particles is larger than max (%ld > %ld), using "
-               "max for copy",
-               src->nop, src->npmax);
+        printf(
+            "Error: Number of particles is larger than max (%ld > %ld), using "
+            "max for copy",
+            src->nop, src->npmax);
     }
 }
 void particles_cpy_to_gpu(struct particles_gpu* dst, struct particles* src)
@@ -790,3 +791,41 @@ int mover_PC_gpu(struct particles* part, struct EMfield* field,
     deallocate_gpu(&gpu_part, &gpu_grd, &gpu_field);
     return (0); // exit succcesfully
 } // end of one particle
+
+/* Function to calculate the Euclidian norm on the difference between two
+ * vectors.*/
+static FPpart euclidianNormTwoVectors(FPpart* vectorA, FPpart* vectorB,
+                                        int lenght)
+{
+    FPpart diffEu = 0;
+    FPpart* result = (FPpart*) malloc(sizeof(FPpart) * lenght);
+
+    for (int i = 0; i < lenght; ++i) {
+        result[i] = vectorA[i] - vectorB[i];
+        diffEu += result[i] * result[i];
+    }
+    diffEu = sqrt(diffEu);
+
+    free(result);
+    return diffEu;
+}
+
+void particle_compaire(struct particles* cpu_part, struct particles* gpu_part)
+{
+    FPpart result;
+
+    std::cout << "Euclidian Norm:" << std::endl;
+    result = euclidianNormTwoVectors(cpu_part->x, gpu_part->x, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " x: " << result << std::endl;
+    result = euclidianNormTwoVectors(cpu_part->y, gpu_part->y, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " y: " << result << std::endl;
+    result = euclidianNormTwoVectors(cpu_part->z, gpu_part->z, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " z: " << result << std::endl;
+
+    result = euclidianNormTwoVectors(cpu_part->u, gpu_part->u, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " u: " << result << std::endl;
+    result = euclidianNormTwoVectors(cpu_part->v, gpu_part->v, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " v: " << result << std::endl;
+    result = euclidianNormTwoVectors(cpu_part->w, gpu_part->w, cpu_part->nop);
+    std::cout << "\tSpecies " <<cpu_part->species_ID << " w: " << result << std::endl;
+}

@@ -21,16 +21,23 @@ $(shell mkdir -p $(DATA_DIR))
 BIN := ./bin
 TARGET=sputniPIC.out
 TARGET_GPU=sputniPIC_gpu.out
+TARGET_COMP=sputniPIC_comp.out
 
 cpu: dir $(BIN)/$(TARGET)
 
 gpu: CXXFLAGS += -DUSE_GPU
 gpu: dir $(BIN)/$(TARGET_GPU)
 
+compare: CXXFLAGS += -DCOMPARE
+compare: dir $(BIN)/$(TARGET_COMP)
+
 dir: ${BIN}
 
 ${BIN}:
 	mkdir -p $(BIN)
+
+$(BIN)/$(TARGET_COMP): $(OBJS)
+	$(NVCC) $(NVCCFLAGS) $+ -o $@
 
 $(BIN)/$(TARGET_GPU): $(OBJS)
 	$(NVCC) $(NVCCFLAGS) $+ -o $@

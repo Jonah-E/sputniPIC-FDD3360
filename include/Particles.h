@@ -80,11 +80,12 @@ struct particles_gpu {
 };
 
 /** Allocate gpu memory for arryas in particle_gpu struct */
-cudaError_t particle_allocate_gpu(struct particles_gpu* gpu_part, long npmax);
+cudaError_t particle_allocate_gpu(struct particles_gpu*, long);
 
 /** particle mover */
 int mover_PC_gpu(struct particles*, struct EMfield*, struct grid*, struct parameters*);
 
-void particle_deallocate_gpu(struct particles_gpu* gpu_part);
+void particle_deallocate_gpu(struct particles_gpu*);
 
+void particle_compaire(struct particles*, struct particles*);
 #endif
