@@ -34,12 +34,12 @@ void readInputFile(struct parameters* param, int argc, char **argv)
             std::cout << "Error when providing command line arguments" << std::endl;
             exit (EXIT_FAILURE);
         }
-        
+
     }
     // /////////////////////
     // Loading the input file
     ConfigFile config(param->inputfile);
-    
+
     /** light speed */
     param->c = config.read < double >("c",1);
     /** 4  pi */
@@ -48,15 +48,15 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->dt = config.read < double >("dt");
     /** decentering parameter */
     param->th = config.read < double >("th",1);
-    
-    
+
+
     /** number of time cycles */
     param->ncycles = config.read < int >("ncycles");
     /** mover predictor correcto iteration */
     param->NiterMover = config.read < int >("NiterMover",3);
     /** number of particle of subcycles in the mover */
     param->n_sub_cycles = config.read <int>("n_sub_cycles", 1);
-    
+
     /** simulation box length - X direction   */
     param->Lx = config.read < double >("Lx",1);;
     /** simulation box length - Y direction   */
@@ -77,17 +77,17 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->z_center = config.read < double >("z_center",0.5);
     /** object size - assuming a cubic box or sphere  */
     param->L_square = config.read < double >("L_square",0.2);
-    
-    
+
+
     // THIS IS IMPORTANT
     /** number of actual species */
     param->ns = config.read < int >("ns");
     ////
     ////
-    
-    
+
+
     /** read input parameters for particles */
-    
+
     // We read maximum 6 species from inputfile
     array_int npcelx0 = config.read < array_int > ("npcelx");
     array_int npcely0 = config.read < array_int > ("npcely");
@@ -99,7 +99,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     array_double u00 = config.read < array_double > ("u0");
     array_double v00 = config.read < array_double > ("v0");
     array_double w00 = config.read < array_double > ("w0");
-    
+
     param->npcelx[0] = npcelx0.a;
     param->npcely[0] = npcely0.a;
     param->npcelz[0] = npcelz0.a;
@@ -110,7 +110,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->u0[0] = u00.a;
     param->v0[0] = v00.a;
     param->w0[0] = w00.a;
-    
+
     if (param->ns > 1) {
         param->npcelx[1] = npcelx0.b;
         param->npcely[1] = npcely0.b;
@@ -171,7 +171,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
         param->v0[5] = v00.f;
         param->w0[5] = w00.f;
     }
-    
+
     // Initialization of densities
     array_double rhoINIT0 = config.read < array_double > ("rhoINIT");
     param->rhoINIT[0] = rhoINIT0.a;
@@ -185,7 +185,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
         param->rhoINIT[4] = rhoINIT0.e;
     if (param->ns > 5)
         param->rhoINIT[5] = rhoINIT0.f;
-    
+
     // Calculate the total number of particles in the domain
     param->NpMaxNpRatio = config.read < double >("NpMaxNpRatio",1.0);
     int npcel = 0;
@@ -194,7 +194,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
         param->np[i] = npcel * param->nxc * param->nyc * param->nzc;
         param->npMax[i] = (long) (param->NpMaxNpRatio * param->np[i]);
     }
-    
+
     // Boundary Conditions
     /** Periodicity for fields X **/
     param->PERIODICX = config.read < bool >("PERIODICX",true);
@@ -208,7 +208,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->PERIODICY_P = config.read < bool >("PERIODICY_P",false);
     /** Periodicity for Particles Y **/
     param->PERIODICZ_P = config.read < bool >("PERIODICZ_P",true);
-    
+
     // PHI Electrostatic Potential
     param->bcPHIfaceXright = config.read < int >("bcPHIfaceXright",1);
     param->bcPHIfaceXleft = config.read < int >("bcPHIfaceXleft",1);
@@ -216,7 +216,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->bcPHIfaceYleft = config.read < int >("bcPHIfaceYleft",1);
     param->bcPHIfaceZright = config.read < int >("bcPHIfaceZright",1);
     param->bcPHIfaceZleft = config.read < int >("bcPHIfaceZleft",1);
-    
+
     // EM field boundary condition
     param->bcEMfaceXright = config.read < int >("bcEMfaceXright",1);
     param->bcEMfaceXleft = config.read < int >("bcEMfaceXleft",1);
@@ -224,7 +224,7 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->bcEMfaceYleft = config.read < int >("bcEMfaceYleft",1);
     param->bcEMfaceZright = config.read < int >("bcEMfaceZright",1);
     param->bcEMfaceZleft = config.read < int >("bcEMfaceZleft",1);
-    
+
     // Particles Boundary condition
     param->bcPfaceXright = config.read < int >("bcPfaceXright",1);
     param->bcPfaceXleft = config.read < int >("bcPfaceXleft",1);
@@ -232,51 +232,51 @@ void readInputFile(struct parameters* param, int argc, char **argv)
     param->bcPfaceYleft = config.read < int >("bcPfaceYleft",1);
     param->bcPfaceZright = config.read < int >("bcPfaceZright",1);
     param->bcPfaceZleft = config.read < int >("bcPfaceZleft",1);
-    
+
     // take the injection of the particless
     param->Vinj = config.read < double >("Vinj",0.0);
-    
+
     // Initialization
     param->B0x = config.read < double >("B0x",0.0);
     param->B0y = config.read < double >("B0y",0.0);
     param->B0z = config.read < double >("B0z",0.0);
     param->delta = config.read < double >("delta",0.5);
-    
-    
+
+
     /** Smoothing quantities */
     param->SmoothON = config.read < bool >("SmoothON",true); // Smoothing is ON by default
     /** Smoothing value*/
     param->SmoothValue = config.read < double >("SmoothValue",0.5); // between 0 and 1, typically 0.5
     /** Ntimes: smoothing is applied */
     param->SmoothTimes = config.read < int >("SmoothTimes",6);
-    
+
     // Waves info
     param->Nwaves = config.read <int>("Nwaves", 1);
     param->dBoB0 = config.read <double>("dBoB0", 0.0);
     param->WaveFile = config.read < string > ("WaveFile","WaveFile.txt");
     param->energy = config.read < double >("energy",0.018199864696222);
     param->pitch_angle = config.read < double >("pitch_angle",0.698131700797732); // 40 degree default
-    
+
     param->verbose = config.read < bool > ("verbose",true);
-    
+
     // Poisson Correction
     param->PoissonCorrection = config.read <bool>("PoissonCorrection",true);
     param->CGtol = config.read < double >("CGtol",1E-3);
     param->GMREStol = config.read < double >("GMREStol",1E-3);
-    
+
     // needed for restart (in this case no restart)
     param->first_cycle_n = 1;
-    
+
     // take the output cycles
     param->FieldOutputCycle = config.read < int >("FieldOutputCycle",10);
     param->ParticlesOutputCycle = config.read < int >("ParticlesOutputCycle",100);
     param->RestartOutputCycle = config.read < int >("RestartOutputCycle",100000);
     param->DiagnosticsOutputCycle = config.read < int >("DiagnosticsOutputCycle",10);
-    
-    
+
+
     param->SaveDirName = config.read < string > ("SaveDirName");
     param->RestartDirName = config.read < string > ("RestartDirName");
-    
+
 }
 
 /** Print Simulation Parameters */
@@ -302,20 +302,20 @@ void printParameters(struct parameters* param)
 
 
 /** Save Simulation Parameters */
-void saveParameters(struct parameters* param)
+void saveParameters(struct parameters* param, string filename_addition)
 {
-    
+
     string temp;
-    temp = param->SaveDirName + "/sputniPICparameters.txt";
-    
+    temp = param->SaveDirName + "/sputniPICparameters_" + filename_addition + ".txt";
+
     std::ofstream my_file(temp.c_str());
-    
+
     my_file << "-----------------------------" << std::endl;
     my_file << "- sputniPIC Sim. Parameters -" << std::endl;
     my_file << "-----------------------------" << std::endl;
-    
+
      my_file << std::endl;
-    
+
     my_file << "Number of species    = " << param->ns << std::endl;
     for (int i = 0; i < param->ns; i++)
         my_file << "Number of particles of species " << i << " = " << param->np[i] << "\t (MAX = " << param->npMax[i] << ")" << "  QOM = " << param->qom[i] << std::endl;
@@ -345,31 +345,31 @@ void saveParameters(struct parameters* param)
     my_file << "Results saved in: " << param->SaveDirName << std::endl;
     my_file << "Restart saved in: " << param->RestartDirName << std::endl;
     my_file << "---------------------" << std::endl;
-    
+
     my_file.close();
-    
+
 }
 
 
-void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field)
+void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field, string filename_addition)
 {
     // stream file to be opened and managed
     string filename = "E";
     string temp;
     std::stringstream cc;
     cc << cycle;
-    temp = "./data/" + filename + "_"+ cc.str() ;
+    temp = "./data/" + filename + "_" + filename_addition + "_" + cc.str() ;
     temp += ".vtk";
     std::cout << "Opening file: " << temp << std::endl;
-    
+
     int nxn = grd->nxn;
     int nyn = grd->nyn;
     int nzn = grd->nzn;
-    
+
     double dx = grd->dx;
     double dy = grd->dy;
     double dz = grd->dz;
-    
+
     std::ofstream my_fileE(temp.c_str());
     my_fileE << "# vtk DataFile Version 1.0" << std::endl;
     my_fileE << "E field" << std::endl;
@@ -380,10 +380,10 @@ void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field)
     my_fileE << "SPACING " << dx << " " << dy << " " << dz << std::endl;
     my_fileE << "POINT_DATA " << (nxn-3)*(nyn-3)*(nzn-3) << std::endl;
     my_fileE << "VECTORS E float" << std::endl;
-    
+
     double Ex = 0, Ey = 0, Ez = 0;
-    
-    
+
+
     for (int k=1; k < nzn-2; k++)
       for (int j=1; j < nyn-2; j++)
         for (int i=1; i < nxn-2; i++){
@@ -398,11 +398,11 @@ void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field)
                 Ez = 0.0;
             my_fileE << Ex << " " << Ey <<  " " << Ez <<  std::endl;
         }
-    
+
     my_fileE.close();
-    
+
     filename = "B";
-    temp = "./data/" + filename + "_"+ cc.str() ;
+    temp = "./data/" + filename + "_" + filename_addition + "_" + cc.str() ;
     temp += ".vtk";
     std::cout << "Opening file: " << temp << std::endl;
     std::ofstream my_file2(temp.c_str());
@@ -415,10 +415,10 @@ void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field)
     my_file2 << "SPACING " << dx << " " << dy << " " << dz << std::endl;
     my_file2 << "POINT_DATA " << (nxn-3)*(nyn-3)*(nzn-3) << std::endl;
     my_file2 << "VECTORS B float" << std::endl;
-    
-    
+
+
     double Bx = 0, By = 0, Bz = 0;
-    
+
     for (int k=1; k < nzn-2; k++)
        for (int j=1; j < nyn-2; j++)
         for (int i=1; i < nxn-2; i++){
@@ -433,32 +433,32 @@ void VTK_Write_Vectors(int cycle, struct grid *grd, struct EMfield* field)
                 Bz = 0.0;
             my_file2 << Bx << " " << By  <<  " " << Bz <<  std::endl;
         }
-    
+
     my_file2.close();
-    
+
 }
 
-void VTK_Write_Scalars(int cycle, struct grid *grd, struct interpDensSpecies* ids, struct interpDensNet* idn)
+void VTK_Write_Scalars(int cycle, struct grid *grd, struct interpDensSpecies* ids, struct interpDensNet* idn, string filename_addition)
 {
     // stream file to be opened and managed
     string filename = "rhoe";
     string temp;
     std::stringstream cc;
     cc << cycle;
-    temp = "./data/" + filename + "_"+ cc.str() ;
+    temp = "./data/" + filename + "_" + filename_addition + "_" + cc.str() ;
     temp += ".vtk";
     std::cout << "Opening file: " << temp << std::endl;
-    
+
     // get the number of nodes
     int nxn = grd->nxn;
     int nyn = grd->nyn;
     int nzn = grd->nzn;
-    
+
     // get the grid spacing
     double dx = grd->dx;
     double dy = grd->dy;
     double dz = grd->dz;
-    
+
     std::ofstream my_file(temp.c_str());
     my_file << "# vtk DataFile Version 1.0" << std::endl;
     my_file << "Electron Density - Current Sheet " << std::endl;
@@ -470,17 +470,17 @@ void VTK_Write_Scalars(int cycle, struct grid *grd, struct interpDensSpecies* id
     my_file << "POINT_DATA " << (nxn-3)*(nyn-3)*(nzn-3) << std::endl;
     my_file << "SCALARS rhoe float" << std::endl;
     my_file << "LOOKUP_TABLE default" << std::endl;
-    
+
     for (int k=1; k < nzn-2; k++)
       for (int j=1; j < nyn-2; j++)
         for (int i=1; i < nxn-2; i++){
             my_file << ids[0].rhon[i][j][k] << std::endl;
         }
-    
+
     my_file.close();
-    
+
     filename = "rhoi";
-    temp = "./data/" + filename + "_"+ cc.str() ;
+    temp = "./data/" + filename + "_" + filename_addition + "_" + cc.str() ;
     temp += ".vtk";
     std::cout << "Opening file: " << temp << std::endl;
     std::ofstream my_file2(temp.c_str());
@@ -494,17 +494,17 @@ void VTK_Write_Scalars(int cycle, struct grid *grd, struct interpDensSpecies* id
     my_file2 << "POINT_DATA " << (nxn-3)*(nyn-3)*(nzn-3) << std::endl;
     my_file2 << "SCALARS rhoi float" << std::endl;
     my_file2 << "LOOKUP_TABLE default" << std::endl;
-    
+
     for (int k=1; k < nzn-2; k++)
       for (int j=1; j < nyn-2; j++)
         for (int i=1; i < nxn-2; i++){
             my_file2 << ids[1].rhon[i][j][k] << std::endl;
         }
-    
+
     my_file2.close();
-    
+
     filename = "rho_net";
-    temp = "./data/" + filename + "_"+ cc.str() ;
+    temp = "./data/" + filename + "_" + filename_addition + "_" + cc.str() ;
     temp += ".vtk";
     std::cout << "Opening file: " << temp << std::endl;
     std::ofstream my_file1(temp.c_str());
@@ -518,14 +518,14 @@ void VTK_Write_Scalars(int cycle, struct grid *grd, struct interpDensSpecies* id
     my_file1 << "POINT_DATA " << (nxn-3)*(nyn-3)*(nzn-3)  << std::endl;
     my_file1 << "SCALARS rhonet float" << std::endl;
     my_file1 << "LOOKUP_TABLE default" << std::endl;
-    
+
     for (int k=1; k < nzn-2; k++)
       for (int j=1; j < nyn-2; j++)
         for (int i=1; i < nxn-2; i++){
             my_file1 << idn->rhon[i][j][k]  << std::endl;
         }
-    
+
     my_file1.close();
-    
-    
+
+
 }

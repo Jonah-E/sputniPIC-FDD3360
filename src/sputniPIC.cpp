@@ -38,7 +38,11 @@ int main(int argc, char **argv){
     // Read the input file name from command line
     readInputFile(&param,argc,argv);
     printParameters(&param);
-    saveParameters(&param);
+#ifdef USE_GPU
+    saveParameters(&param, "gpu");
+#else
+    saveParameters(&param, "cpu");
+#endif
 
     // Timing variables
     double iStart = cpuSecond();
@@ -120,8 +124,13 @@ int main(int argc, char **argv){
 
         // write E, B, rho to disk
         if (cycle%param.FieldOutputCycle==0){
-            VTK_Write_Vectors(cycle, &grd,&field);
-            VTK_Write_Scalars(cycle, &grd,ids,&idn);
+#ifdef USE_GPU
+            VTK_Write_Vectors(cycle, &grd,&field, "gpu");
+            VTK_Write_Scalars(cycle, &grd,ids,&idn, "gpu");
+#else
+            VTK_Write_Vectors(cycle, &grd,&field, "cpu");
+            VTK_Write_Scalars(cycle, &grd,ids,&idn, "cpu");
+#endif
         }
 
         eInterp += (cpuSecond() - iInterp); // stop timer for interpolation
