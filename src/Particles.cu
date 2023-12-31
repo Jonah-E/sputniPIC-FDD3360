@@ -726,7 +726,7 @@ void deallocate_gpu(struct particles_gpu* gpu_part, struct grid_gpu* gpu_grd,
     emfield_deallocate_gpu(gpu_field);
 }
 
-#define MAX_THREADS_PER_BLOCK 1024
+#define MAX_THREADS_PER_BLOCK 512
 
 /** particle mover */
 int mover_PC_gpu(struct particles* part, struct EMfield* field,
