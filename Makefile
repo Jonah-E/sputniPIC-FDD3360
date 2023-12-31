@@ -23,6 +23,11 @@ TARGET=sputniPIC.out
 TARGET_GPU=sputniPIC_gpu.out
 TARGET_COMP=sputniPIC_comp.out
 
+ifdef USE_DOUBLE
+	CXXFLAGS += -DUSE_DOUBLE
+	NVCCFLAGS += -DUSE_DOUBLE
+endif
+
 cpu: dir $(BIN)/$(TARGET)
 
 gpu: CXXFLAGS += -DUSE_GPU
