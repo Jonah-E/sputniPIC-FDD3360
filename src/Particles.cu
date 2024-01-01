@@ -785,6 +785,7 @@ int mover_PC_gpu(struct particles* part, struct EMfield* field,
         printf("Error when running GPU: %s (%d)\n",
                cudaGetErrorString(deviceError), deviceError);
     }
+    cudaDeviceSynchronize();
 
     particles_cpy_from_gpu(part, &gpu_part);
 
